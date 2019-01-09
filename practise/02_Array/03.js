@@ -20,29 +20,29 @@ class MonthTemps {
       console.log('this month is too full to add!');
     }
   }
-  getMonthAverage() {
-    return this._flatten().reduce((prev, next) => {
+  getMonthAverage() { // 月平均(周平均?)
+    return Number((this._flatten().reduce((prev, next) => {
       return prev + next;
-    }) / this.days;
+    }) / this.days).toFixed(2));
   }
-  getWeekAverage(nth) {
+  getWeekAverage(nth) { // 第几周平均
     if (nth > 5) nth = 5;
-    const days = this.dataStore[nth - 1].length;
-    return this.dataStore[nth - 1].reduce((prev, next) => {
+    const days = this.dataStore[nth - 1].filter(item => this._valuable(item)).length;
+    return Number((this.dataStore[nth - 1].reduce((prev, next) => {
       return prev + next;
-    }) / days;
+    }) / days).toFixed(2));
   }
   _flatten() {
     return Array.prototype.concat(null, ...this.dataStore);
   }
   _valuable(item) {
-    return typeof item === 'number' && item !== 0;
+    return typeof item === 'number';
   }
   _createWeek(nth) {
     if (nth === 5) {
-      return new Array(3).fill(0);
+      return new Array(3).fill(null);
     }
-    return new Array(7).fill(0);
+    return new Array(7).fill(null);
   }
 }
 
@@ -57,7 +57,7 @@ console.log(monthTemps.dataStore);
 */
 
 for (let i = 0; i < 40; i ++) {
-  monthTemps.addDayData( Math.round(Math.random() * 100) );
+  monthTemps.addDayData( -20 + Math.round(Math.random() * 60) );
 }
 console.log(monthTemps.dataStore);
 /*
